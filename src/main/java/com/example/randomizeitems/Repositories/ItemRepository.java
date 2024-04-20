@@ -1,12 +1,12 @@
 package com.example.randomizeitems.Repositories;
 
-import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.stereotype.Service;
+import com.example.randomizeitems.Entity.ItemEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import javax.swing.text.html.parser.Entity;
-import java.io.Serializable;
+import java.util.List;
 
-@Table(name="items")
-public class ItemRepository{
+@Repository
+public interface ItemRepository extends JpaRepository<ItemEntity, Long> {
+    List<ItemEntity> findAllById(long id);
 }

@@ -1,9 +1,6 @@
 package com.example.randomizeitems.Entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import javax.annotation.processing.Generated;
 
@@ -12,6 +9,7 @@ import javax.annotation.processing.Generated;
 public class ItemEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private long id;
 
