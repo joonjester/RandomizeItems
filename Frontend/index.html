@@ -21,32 +21,33 @@
     <input type="text" id="category" name="category" placeholder="What category is it">
 
     <script>
+        async function createItem(itemData) {
+            const axios = require('axios');
+
+            axios.post('http://localhost:8080/api/items/createItem', itemData, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+            })
+            .then(response => {
+            console.log('Response:', response.itemData);
+            })
+            .catch(error => {
+            console.error('Error:', error);
+            });
+        }
+
         document.getElementById("createBoxBtn").addEventListener("click", function() {
             // Retrieve the value of the input field
             var inputName = document.getElementById("name").value;
             var inputCategory = document.getElementById("category").value;
 
-            const createItemUrl = "http://localhost:8080/api/items/createItem";
-            const itemData = {
-            name: inputName,
-            category: inputCategory
-            };
+            const data = {
+                name: inputName,
+                category: inputCategory
+            }
 
-            fetch(createItemUrl, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(itemData),
-            mode: "no-cors"
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log("Item created successfully:", data);
-            })
-            .catch(error => {
-                console.error("Error creating item:", error);
-            });
+            createItem(data)
 
             // Create a new box element
             var box = document.createElement("div");
