@@ -17,32 +17,56 @@
 </head>
 <body>
     <button id="createBoxBtn">Create Box</button>
-    <input type="text" id="textInput" name="name" placeholder="What should be randomized">
-
+    <input type="text" id="name" name="name" placeholder="What should be randomized">
+    <input type="text" id="category" name="category" placeholder="What category is it">
+    
     <script>
         document.getElementById("createBoxBtn").addEventListener("click", function() {
             // Retrieve the value of the input field
-            var inputValue = document.getElementById("textInput").value;
+            var inputName = document.getElementById("name").value;
+            var inputCategory = document.getElementById("category").value;
+
+            const createItemUrl = "http://localhost:8080/api/items/createItem";
+            const itemData = {
+            name: inputName,
+            category: inputCategory
+            };
+
+            fetch(createItemUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(itemData),
+            mode: "cors"
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Item created successfully:", data);
+            })
+            .catch(error => {
+                console.error("Error creating item:", error);
+            });
 
             // Create a new box element
             var box = document.createElement("div");
             box.classList.add("box");
 
             // Add text to the box
-            var text = document.createTextNode(inputValue);
-            box.appendChild(text);
+            var content = document.createTextNode(inputName+"\n"+inputCategory);
 
+            box.appendChild(content);
+            
             // Append the box to the body
             document.body.appendChild(box);
-        });
-        
-        // Add event delegation for dynamically created boxes
-        document.body.addEventListener("click", function(event) {
-            if (event.target.classList.contains("box")) {
-                // Get the text content of the clicked box
-                var boxText = event.target.textContent;
-                alert("Box clicked! Text: " + boxText);
-            }
+
+            let listOfItemsToRandomize = [];
+            // Add click event listener to the box
+            box.addEventListener("click", function() {
+                var list = listOfItemsToRandomize.push(inputValue)
+                alert("Box clicked! Text: " + inputValue);
+                console.log(list)
+            });
         });
     </script>
 </body>
