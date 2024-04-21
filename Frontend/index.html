@@ -19,7 +19,7 @@
     <button id="createBoxBtn">Create Box</button>
     <input type="text" id="name" name="name" placeholder="What should be randomized">
     <input type="text" id="category" name="category" placeholder="What category is it">
-    
+
     <script>
         document.getElementById("createBoxBtn").addEventListener("click", function() {
             // Retrieve the value of the input field
@@ -35,10 +35,10 @@
             fetch(createItemUrl, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(itemData),
-            mode: "cors"
+            mode: "no-cors"
             })
             .then(response => response.json())
             .then(data => {
