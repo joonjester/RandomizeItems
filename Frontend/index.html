@@ -14,17 +14,20 @@
             cursor: pointer; /* Change cursor to pointer to indicate clickable */
         }
     </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 </head>
 <body>
+
     <button id="createBoxBtn">Create Box</button>
-    <input type="text" id="name" name="name" placeholder="What should be randomized">
-    <input type="text" id="category" name="category" placeholder="What category is it">
+    <input type="text" id="name" placeholder="What should be randomized">
+    <input type="text" id="category" placeholder="What category is it">
 
     <script>
         async function createItem(itemData) {
             const axios = require('axios');
 
-            axios.post('http://localhost:8080/api/items/createItem', itemData, {
+            axios.post('http://localhost:8080/api/items/createItem', JSON.stringify(itemData), {
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -39,8 +42,8 @@
 
         document.getElementById("createBoxBtn").addEventListener("click", function() {
             // Retrieve the value of the input field
-            var inputName = document.getElementById("name").value;
-            var inputCategory = document.getElementById("category").value;
+            const inputName = document.getElementById("name").value;
+            const inputCategory = document.getElementById("category").value;
 
             const data = {
                 name: inputName,
