@@ -1,6 +1,7 @@
 package com.example.randomizeitems.Entity;
 
 import jakarta.persistence.*;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.processing.Generated;
 

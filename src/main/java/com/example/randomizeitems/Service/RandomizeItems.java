@@ -31,5 +31,13 @@ public class RandomizeItems implements ItemServices{
         return itemRepository.findAllById(ids);
     }
 
+    @Override
+    public Long findItemIdByNameAndCategory(String itemName, String category) {
+        return itemRepository.findItemIdByNameAndCategory(itemName, category);
+    }
 
+    @Override
+    public List<ItemEntity> getAllItems() {
+        return itemRepository.findAll();
+    }
 }
