@@ -1,0 +1,21 @@
+{
+    "name": "randomizeitems",
+    "version": "1.0.0",
+    "description": "It should randomize items",
+    "main": "index.js",
+    "scripts": {
+      "start": "node server.js",
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "hyunjoon choi",
+    "license": "ISC",
+    "dependencies": {
+      "express": "^4.17.1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/joonjester/RandomizeItems.git"
+    }
+  }
+  
