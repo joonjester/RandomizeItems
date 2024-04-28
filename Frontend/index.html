@@ -9,9 +9,17 @@
             border: 2px solid #000;
             padding: 20px;
             width: 200px;
+            height: 50px;
             text-align: center;
             margin: 10px;
-            cursor: pointer; /* Change cursor to pointer to indicate clickable */
+            cursor: pointer;
+            font-size: 30px;
+        }
+
+        .wrapper {
+            display: flex;
+            flex-direction: row;
+            font-size: 40px;
         }
     </style>
 </head>
@@ -33,61 +41,71 @@
                     'Content-Type': 'application/json'
                 }
             });
-            console.log('Response:', response.data);
+            if (response.data === "Item created successfully") {
+                return true;
+            } else if (response.data === "This Item already exists") {
+                return false;
+            }
+
         } catch (error) {
             console.error('Error:', error);
         }
     }
 
-    async function getIdFromBox(boxDetails) {
-        try {
-            const response = await axios.post('http://localhost:8080/api/items/getIds', boxDetails, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            console.log('Response:', response.data);
-            listOfItems.push(response.data)
-            console.log(listOfItems)
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    }
+    // Function to create a box element with the specified name and category
+    function createBox(name, category) {
+        const wrapper = document.createElement("div")
+        wrapper.classList.add("wrapper")
+        wrapper.textContent = category;
+        document.body.appendChild(wrapper)
 
-    document.getElementById("createBoxBtn").addEventListener("click", function() {
+        const box = document.createElement("div");
+        
+        box.classList.add("box");
+        // Set text content
+        box.textContent = name;
+        // Add click event listener
+        box.addEventListener("click", function() {
+            getIdFromBox(name, category);
+            alert("You just clicked " + name);
+        });
+
+        // Append the box to the body\
+        wrapper.appendChild(box);
+
+    }
+    // Function to handle the click event of the create box button
+    document.getElementById("createBoxBtn").addEventListener("click", async function() {
         // Retrieve the value of the input fields
         const inputName = document.getElementById("name").value;
         const inputCategory = document.getElementById("category").value;
 
-        // Create data object
         const data = {
             name: inputName,
-            category: inputCategory
-        };
+            category : inputCategory
+        }
 
-        // Call createItem function to send POST request
-        createItem(data);
-
-        // Create a new box element
-        const box = document.createElement("div");
-        box.classList.add("box");
-
-        // Add text to the box
-        const content = document.createTextNode(inputName + "\n" + inputCategory);
-        box.appendChild(content);
-
-        // Append the box to the body
-        document.body.appendChild(box);
-
-        var boxes = document.querySelectorAll('.box')
-
-        boxes.forEach(function(box){
-            box.addEventListener("click", function() {
-                const boxId = getIdFromBox(data)
-                alert("You just added "+ inputName)
-            });
-        })         
+        const result = await createItem(data);
+        if (result) {
+            createBox(inputName, inputCategory);
+            alert("Item created successfully")
+        } else {
+            alert("Item already exists")
+        }
     });
+
+    // Function to asynchronously get IDs from the server
+    async function getIdFromBox(boxName, boxCategory) {
+        try {
+            const response = await axios.get(`http://localhost:8080/api/items/getIds?nameOfBox=${boxName}&categoryOfBox=${boxCategory}`);
+            console.log('Response:', response.data);
+            listOfItems.push(response.data);
+            console.log(listOfItems);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
 
     async function randomizeTheseItems(listItems) {
         try {
@@ -98,18 +116,14 @@
             });
             const randomizedText = response.data;
 
-            // Create an overlay div
             const overlay = document.createElement('div');
             overlay.classList.add('overlay');
 
-            // Create a big text element
             const bigText = document.createElement('h1');
             bigText.textContent = randomizedText;
 
-            // Append the big text element to the overlay
             overlay.appendChild(bigText);
 
-            // Append the overlay to the body
             document.body.appendChild(overlay);
             } catch (error) {
                 console.error('Error:', error);
@@ -126,38 +140,48 @@
             // Make a GET request to fetch all items from the database
             const response = await axios.get('http://localhost:8080/api/items/allItems');
 
+            // Mapping between categories and their wrappers
+            const categoryWrappers = {};
+
             // Loop through each item in the response data
             response.data.forEach(item => {
+                // Check if a wrapper for this category exists
+                let wrapper = categoryWrappers[item.category];
+
+                // If wrapper doesn't exist, create a new one
+                if (!wrapper) {
+                    wrapper = document.createElement("div");
+                    wrapper.classList.add("wrapper");
+                    wrapper.textContent = item.category;
+                    document.body.appendChild(wrapper);
+
+                    // Store the wrapper in the mapping
+                    categoryWrappers[item.category] = wrapper;
+                }
+
                 // Create a new box element
                 const box = document.createElement("div");
                 box.classList.add("box");
 
                 // Add text to the box
-                const content = document.createTextNode(item.name + "\n" + item.category);
+                const content = document.createTextNode(item.name);
                 box.appendChild(content);
 
-                // Append the box to the body
-                document.body.appendChild(box);
+                // Add click event listener to the box
+                box.addEventListener("click", function() {
+                    getIdFromBox(item.name, item.category);
+                    alert("You just clicked " + item.name);
+                });
+
+                // Append the box to the wrapper
+                wrapper.appendChild(box);
             });
         } catch (error) {
             console.error('Error fetching items:', error);
         }
     }
 
-    window.addEventListener('load', function() {
-        displayAllItems();
-        const box = document.createElement("div");
-        box.classList.add("box");
-
-        var boxes = document.querySelectorAll('.box')
-
-        boxes.forEach(function(box){
-            box.addEventListener("click", function() {
-                const boxId = getIdFromBox(data)
-                alert("You just added "+ inputName)
-            });
-        }) 
-    });
+    displayAllItems();
     </script>
 </body>
 </html>

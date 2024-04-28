@@ -21,6 +21,10 @@ public class RandomizeItems implements ItemServices{
         return items.get(randomIndex).getName();
     }
 
+    public boolean doesItemExist(String name, String category) {
+        return itemRepository.findByName(name) != null && itemRepository.findByCategory(category) != null;
+    }
+
     @Override
     public ItemEntity create(ItemEntity itemEntity) {
         return itemRepository.save(itemEntity);

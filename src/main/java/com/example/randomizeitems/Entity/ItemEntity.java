@@ -1,9 +1,6 @@
 package com.example.randomizeitems.Entity;
 
 import jakarta.persistence.*;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.processing.Generated;
 
 @Entity
 @Table(name = "item")
@@ -14,12 +11,11 @@ public class ItemEntity {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "category")
-    private String category;
-
     @Column(name = "name")
     private String name;
 
+    @Column(name = "category")
+    private String category;
     public void setId(Long id) {
         this.id = id;
     }

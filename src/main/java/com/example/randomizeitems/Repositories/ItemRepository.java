@@ -9,7 +9,9 @@ import java.util.List;
 
 @Repository
 public interface ItemRepository extends JpaRepository<ItemEntity, Long> {
-    List<ItemEntity> findAllById(long id);
+    ItemEntity findByName(String name);
+
+    ItemEntity findByCategory(String category);
 
     @Query("SELECT i.id FROM ItemEntity i WHERE i.name = :itemName AND i.category = :category")
     Long findItemIdByNameAndCategory(String itemName, String category);

@@ -26,8 +26,12 @@ public class ItemController {
     }
 
     @PostMapping("/createItem")
-    public ItemEntity item(@RequestBody ItemEntity itemEntity){
-        return itemServices.create(itemEntity);
+    public String item(@RequestBody ItemEntity itemEntity) {
+        if (randomizeItems.doesItemExist(itemEntity.getName(), itemEntity.getCategory())) {
+            return ("Item already exists");
+        }
+        itemServices.create(itemEntity);
+        return ("Item created successfully");
     }
 
     @GetMapping("/randomize")
@@ -37,10 +41,9 @@ public class ItemController {
         return randomizeItems.getRandomItem(amountOfItems, items);
     }
 
-    @PostMapping("/getIds")
-    public Long receiveBox(@RequestBody ItemEntity item) {
-        String nameOfBox = item.getName();
-        String categoryOfBox = item.getCategory();
-        return itemServices.findItemIdByNameAndCategory(nameOfBox, categoryOfBox);
+    @GetMapping("/getIds")
+    public Long receiveBox(@RequestParam String nameOfBox, @RequestParam String categoryOfBox) {
+
+        return randomizeItems.findItemIdByNameAndCategory(nameOfBox, categoryOfBox);
     }
 }
