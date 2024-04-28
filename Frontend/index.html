@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Box with Input Value</title>
     <style>
+        .bigWrapper {
+            display: flex;
+            justify-content: center;
+        }
+
         .box {
             border: 2px solid #000;
             padding: 20px;
@@ -18,18 +23,47 @@
 
         .wrapper {
             display: flex;
-            flex-direction: row;
+            width: 70vw;
+            flex-direction: column;
             font-size: 40px;
+        }
+
+        .bigBox {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .title {
+            margin-top: 30px;
+            border-bottom: 3px solid black;
+        }
+
+        .inputs {
+            display: flex;
+            position: absolute;
+            padding-top: 80px;
+            width: 12vw;
+            height: 20px;
+            flex-direction: column-reverse;
+            align-content: center;
+        }
+
+        .inputs.button{
+            color: black;
+        }
+
+        .inputs.button:hover{
+            color: green;
         }
     </style>
 </head>
 <body>
-
-    <button id="createBoxBtn">Create Box</button>
-    <button id="randomizeBtn">RANDOMIZEE</button>
-    <input type="text" id="name" placeholder="What should be randomized">
-    <input type="text" id="category" placeholder="What category is it">
-
+    <div class="inputs">
+        <button id="createBoxBtn">Create Box</button>
+        <button id="randomizeBtn">RANDOMIZEE</button>
+        <input type="text" id="name" placeholder="What should be randomized">
+        <input type="text" id="category" placeholder="What category is it">
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
 
@@ -54,24 +88,51 @@
 
     // Function to create a box element with the specified name and category
     function createBox(name, category) {
-        const wrapper = document.createElement("div")
-        wrapper.classList.add("wrapper")
-        wrapper.textContent = category;
-        document.body.appendChild(wrapper)
+        const bigWrapper = document.createElement("div");
+        bigWrapper.classList.add("bigWrapper");
+        document.body.appendChild(bigWrapper);
 
+        // Check if a wrapper for this category exists
+        let wrapper = categoryWrappers[item.category];
+
+        // If wrapper doesn't exist, create a new one
+        if (!wrapper) {
+            wrapper = document.createElement("div");
+            wrapper.classList.add("wrapper");
+            bigWrapper.appendChild(wrapper);
+
+            // Create a title element for the category
+            const titleWrapper = document.createElement("div");
+            titleWrapper.classList.add("title");
+            titleWrapper.textContent = item.category;
+            wrapper.appendChild(titleWrapper);
+
+            const bigBox = document.createElement("div");
+            bigBox.classList.add("bigBox");
+            wrapper.appendChild(bigBox);
+
+            // Store the wrapper in the mapping
+            categoryWrappers[item.category] = wrapper;
+        }
+
+        const bigBox = wrapper.querySelector(".bigBox");
+
+        // Create a new box element
         const box = document.createElement("div");
-        
         box.classList.add("box");
-        // Set text content
-        box.textContent = name;
-        // Add click event listener
+
+        // Add text to the box
+        const content = document.createTextNode(item.name);
+        box.appendChild(content);
+
+        // Add click event listener to the box
         box.addEventListener("click", function() {
-            getIdFromBox(name, category);
-            alert("You just clicked " + name);
+            getIdFromBox(item.name, item.category);
+            alert("You just clicked " + item.name);
         });
 
-        // Append the box to the body\
-        wrapper.appendChild(box);
+        // Append the box to the wrapper
+        bigBox.appendChild(box);
 
     }
     // Function to handle the click event of the create box button
@@ -131,7 +192,6 @@
     }
 
     document.getElementById("randomizeBtn").addEventListener("click", function() {
-        
         randomizeTheseItems(listOfItems)
     });
 
@@ -145,6 +205,10 @@
 
             // Loop through each item in the response data
             response.data.forEach(item => {
+                const bigWrapper = document.createElement("div");
+                bigWrapper.classList.add("bigWrapper");
+                document.body.appendChild(bigWrapper);
+
                 // Check if a wrapper for this category exists
                 let wrapper = categoryWrappers[item.category];
 
@@ -152,12 +216,23 @@
                 if (!wrapper) {
                     wrapper = document.createElement("div");
                     wrapper.classList.add("wrapper");
-                    wrapper.textContent = item.category;
-                    document.body.appendChild(wrapper);
+                    bigWrapper.appendChild(wrapper);
+
+                    // Create a title element for the category
+                    const titleWrapper = document.createElement("div");
+                    titleWrapper.classList.add("title");
+                    titleWrapper.textContent = item.category;
+                    wrapper.appendChild(titleWrapper);
+
+                    const bigBox = document.createElement("div");
+                    bigBox.classList.add("bigBox");
+                    wrapper.appendChild(bigBox);
 
                     // Store the wrapper in the mapping
                     categoryWrappers[item.category] = wrapper;
                 }
+
+                const bigBox = wrapper.querySelector(".bigBox");
 
                 // Create a new box element
                 const box = document.createElement("div");
@@ -174,7 +249,8 @@
                 });
 
                 // Append the box to the wrapper
-                wrapper.appendChild(box);
+                bigBox.appendChild(box);
+
             });
         } catch (error) {
             console.error('Error fetching items:', error);
