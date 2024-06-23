@@ -113,13 +113,35 @@ function displayOverlay(randomizedText) {
 
     setTimeout(() => {
         window.location.reload();
-    }, 10000);
+    }, 3000);
 }
 
 // Event listener for the randomize button
 document.getElementById("randomizeBtn").addEventListener("click", function() {
     randomizeTheseItems(listOfItems);
 });
+
+document.getElementById('createBucket').addEventListener('click', function() {
+    const result = Math.round(Math.random());
+    const lavaBucket = document.getElementById('lava');
+    const waterBucket = document.getElementById('water');
+
+    // Hide both images initially
+    lavaBucket.classList.remove('visible');
+    waterBucket.classList.remove('visible');
+
+    // Show the image based on the random result
+    if (result === 1) {
+        waterBucket.classList.add('visible');
+    } else {
+        lavaBucket.classList.add('visible');
+    }
+
+    setTimeout(() => {
+        window.location.reload();
+    }, 7000);
+});
+
 
 // Function to display all items
 async function displayAllItems() {

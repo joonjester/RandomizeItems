@@ -75,7 +75,6 @@
     background-color: aquamarine;
     padding: 5px;
     transform: scaleX(1.05) scaleY(1.05);
-
 }
 
 .overlay {
@@ -92,4 +91,21 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
+}
+
+.bucket{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    opacity: 0;
+    transition: opacity 1s ease-in;
+    z-index: 1000;
+}
+
+#lava.visible{
+    opacity: 1;
+}
+
+#water.visible{
+    opacity: 1;
 }
